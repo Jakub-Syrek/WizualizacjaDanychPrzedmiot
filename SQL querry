@@ -1,0 +1,28 @@
+SELECT 
+Year (f.orderDate) AS Year,
+Month(f.OrderDate) AS MONTH,
+c.EnglishProductCategoryName,
+p.EnglishProductName,
+SUM(f.OrderQuantity) AS OrderQuantity,
+t.SalesTerritoryGroup,
+t.SalesTerritoryCountry,
+SUM(f.SalesAmount) AS SalesAmount,
+SUM (f.TotalProductCost) AS ProductCost
+
+FROM
+dbo.FactInternetSales AS f
+JOIN dbo.DimProduct AS p ON p.ProductKey = f.ProductKey
+JOIN dbo.DimProductSubcategory AS s ON p.ProductSubcategoryKey = s.ProductSubcategoryAlternateKey
+JOIN dbo.DimProductCategory AS c ON s.ProductCategoryKey = c.ProductCategoryKey
+JOIN dbo.DimSalesTerritory AS t ON f.SalesTerritoryKey = t.SalesTerritoryKey
+
+GROUP BY
+p.EnglishProductName,
+c.EnglishProductCategoryName,
+YEAR(f.OrderDate),
+MONTH(f.OrderDate),
+t.SalesTerritoryCountry,
+t.SalesTerritoryGroup
+ORDER BY 
+Month,
+YEAR
